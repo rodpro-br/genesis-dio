@@ -12,27 +12,55 @@ const red = document.querySelector('.red');
 const green = document.querySelector('.green');
 const yellow = document.querySelector('.yellow');
 
+let colorClickEvent = (e) => {
+    if (e.target === green) {
+        click(0);
+    }
+    else if (e.target === red) {
+        click(1);
+    }
+    else if (e.target === yellow) {
+        click(2);
+    }
+    else {
+        click(3);
+    }
+    
+}
+
 //cria ordem aletoria de cores
 let shuffleOrder = () => {
     let colorOrder = Math.floor(Math.random() * 4);
-    order[order.length] = colorOrder;
+    order.push(colorOrder);
     clickedOrder = [];
 
+    green.removeEventListener('click', colorClickEvent);
+    red.removeEventListener('click', colorClickEvent);
+    yellow.removeEventListener('click', colorClickEvent);
+    blue.removeEventListener('click', colorClickEvent);
+
     for(let i in order) {
-        let elementColor = createColorElement(order[i]);
+        let elementColor = getColorElement(order[i]);
         lightColor(elementColor, Number(i) + 1);
     }
+
+    setTimeout(() => {
+        green.addEventListener('click', colorClickEvent);
+        red.addEventListener('click', colorClickEvent);
+        yellow.addEventListener('click', colorClickEvent);
+        blue.addEventListener('click', colorClickEvent);
+    }, 1000);
 }
 
 //acende a proxima cor
 let lightColor = (element, number) => {
-    number = number * 500;
+    number = number * 1000;
     setTimeout(() => {
         element.classList.add('selected');
-    }, number - 250);
+    }, number - 500);
     setTimeout(() => {
         element.classList.remove('selected');
-    });
+    }, number);
 }
 
 //checa se os botoes clicados são os mesmos da ordem gerada no jogo
@@ -51,17 +79,17 @@ let checkOrder = () => {
 
 //funcao para o clique do usuario
 let click = (color) => {
-    clickedOrder[clickedOrder.length] = color;
-    createColorElement(color).classList.add('selected');
+    clickedOrder.push(color);
+    getColorElement(color).classList.add('selected');
 
     setTimeout(() => {
-        createColorElement(color).classList.remove('selected');
+        getColorElement(color).classList.remove('selected');
         checkOrder();
-    },250);
+    }, 250);
 }
 
 //funcao que retorna a cor
-let createColorElement = (color) => {
+let getColorElement = (color) => {
     if(color == 0) {
         return green;
     } else if(color == 1) {
@@ -96,11 +124,11 @@ let playGame = () => {
     nextLevel();
 }
 
-//eventos de clique para as cores
-green.onclick = () => click(0);
-red.onclick = () => click(1);
-yellow.onclick = () => click(2);
-blue.onclick = () => click(3);
+// //eventos de clique para as cores
+// green.onclick = () => click(0);
+// red.onclick = () => click(1);
+// yellow.onclick = () => click(2);
+// blue.onclick = () => click(3);
 
 
 //inicio do jogo
